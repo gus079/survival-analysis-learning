@@ -1,0 +1,45 @@
+---
+title: "Survival"
+author: "GS"
+date: "24/8/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = "")
+```
+
+# Survival Analysis in R
+
+```{r, packages}
+library(tidyverse)
+library(survival)
+
+theme_set(theme_bw())
+```
+
+
+```{r, dataset prostate cancer}
+var_names <- c("patient", "treatment", "time", "status", "age", "psa", "size", "gleason")
+prostate <- read_delim ("prostate_cancer.txt", delim = " ", col_names = var_names)
+
+glimpse(prostate)
+```
+### KM sin grupos
+
+```{r, km sin grupo}
+Surv(prostate$time, prostate$status)
+
+km1 <- survfit(Surv(prostate$time, prostate$status) ~ 1) # el 1 es xq es sin grupos
+
+plot(km1, mark.time = T)
+```
+
+### KM con 2 grupos
+```{r, km con grupos}
+km2 <- survfit(Surv(prostate$time, prostate$status) ~ prostate$treatment) # el 1 es xq es sin grupos
+
+plot(km2, mark.time = T)
+
+```
+
