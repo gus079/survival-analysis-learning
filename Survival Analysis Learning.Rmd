@@ -81,7 +81,27 @@ plot(moto_km2, mark.time = T)
 survdiff(Surv(moto$y, moto$cens) ~ moto$temp_level)
 ```
 
+```{r, coxph ex2}
+df <- tibble(udca1)
+dim(df)
+head(df)
 
+Surv(df$futime, df$status)
+
+km_model <- survfit(Surv(futime, status) ~ trt, data = df)
+autoplot(km_model)
+
+
+cox_model <- coxph(Surv(futime, status) ~ trt + stage + bili + riskscore, data = df)
+summary(cox_model)
+
+cox_model2 <- coxph(Surv(futime, status) ~ trt + riskscore, data = df)
+summary(cox_model2)
+```
+
+```{r, cox plot}
+survfit(cox_model2) %>% autoplot()
+```
 
 
 
