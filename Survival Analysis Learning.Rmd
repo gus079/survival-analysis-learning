@@ -6,7 +6,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, comment = "")
+knitr::opts_chunk$set(echo = TRUE, comment = "", warning = F, message = F)
 ```
 
 # Survival Analysis in R
@@ -15,6 +15,7 @@ knitr::opts_chunk$set(echo = TRUE, comment = "")
 library(tidyverse)
 library(survival)
 library(ggfortify)
+library(survminer)
 
 theme_set(theme_bw())
 ```
@@ -104,6 +105,48 @@ survfit(cox_model2) %>% autoplot()
 ```
 
 
+```{r, lung dataset}
+lung %>%  slice(3:5)
+
+surv_obj <- Surv(lung$time, lung$status)
+
+survfit(surv_obj ~ 1)
+
+(surv_fit <- survfit(surv_obj ~ sex, data = lung))
+
+survdiff(surv_obj ~ lung$sex)
+
+survfit(surv_obj ~ lung$sex) %>% autoplot()
+
+
+# survminer
+
+ggsurvplot(surv_fit, 
+           pval = T,
+           conf.int = T,
+           risk.table = T,
+           surv.median.line = "hv",
+           risk.table.col = "strata",
+           ncensor.plot = T)
+
+
+ggsurvplot(surv_fit, 
+           pval = T,
+           conf.int = T,
+           risk.table = T,
+           surv.median.line = "hv",
+           risk.table.col = "strata",
+           fun = "cumhaz")
+
+ggsurvplot(surv_fit, 
+           pval = T,
+           conf.int = T,
+           risk.table = T,
+           surv.median.line = "hv",
+           risk.table.col = "strata",
+           fun = "event")
+
+```
 
 
 
